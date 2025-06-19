@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class DishJpaAdapter implements IDishPersistencePort {
@@ -21,8 +23,17 @@ public class DishJpaAdapter implements IDishPersistencePort {
     @Override
     public void saveDish(Dish dish) {
         log.debug("Converting domain model to entity: {}", dish.getName());
-        DishEntity entity = dishEntityMapper.toEntity(dish);
+        DishEntity entity = (dish.getId() == null )
+            ? dishEntityMapper.toEntity(dish)
+            : dishEntityMapper.toEntityForUpdate(dish);
         dishRepository.save(entity);
         log.info("Dish '{}' saved successfully in the database", dish.getName());
+    }
+
+    @Override
+    public Optional<Dish> findById(Long id) {
+        log.debug("Searching for dish with ID {}", id);
+        return dishRepository.findById(id)
+                .map(dishEntityMapper::toDomain);
     }
 }

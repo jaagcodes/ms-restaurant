@@ -84,4 +84,19 @@ public class Dish {
     public void setActive(Boolean active) { this.active = active; }
 
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+
+    @Override
+    public String toString() {
+        return "Dish{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", categoryId=" + categoryId +
+                ", restaurantId=" + restaurantId +
+                ", active=" + active +
+                ", ownerId=" + ownerId +
+                '}';
+    }
 }
