@@ -1,6 +1,7 @@
 package com.plazoleta.msrestaurant.application.handler;
 
 import com.plazoleta.msrestaurant.application.dto.CreateDishRequest;
+import com.plazoleta.msrestaurant.application.dto.UpdateDishRequest;
 import com.plazoleta.msrestaurant.application.mapper.DishRequestMapper;
 import com.plazoleta.msrestaurant.domain.api.IDishServicePort;
 import com.plazoleta.msrestaurant.domain.model.Dish;
@@ -24,5 +25,23 @@ public class DishHandler implements IDishHandler {
         log.debug(" Invoking use case to create dish: {}", dish.getName());
         dishServicePort.createDish(dish);
         log.info("✅ Dish '{}' processed successfully by handler", dish.getName());
+    }
+
+    @Override
+    public void updateDish( Long id, UpdateDishRequest request) {
+        log.debug(" Mapping UpdateDishRequest to domain model: {}", request.toString());
+        Dish dish = new Dish(
+                id,
+                null, // name
+                request.getPrice(),
+                request.getDescription(),
+                null, // imageUrl
+                null, // categoryId
+                null, // restaurantId
+                null, // active
+                request.getOwnerId()
+        );
+        dishServicePort.updateDish(dish);
+        log.info("✅ Dish ID '{}' updated successfully by handler", dish.getId());
     }
 }

@@ -21,6 +21,19 @@ public class DishEntityMapper {
                 .build();
     }
 
+    public DishEntity toEntityForUpdate(Dish dish) {
+        return DishEntity.builder()
+                .id(dish.getId())
+                .name(dish.getName())
+                .price(dish.getPrice())
+                .description(dish.getDescription())
+                .urlImage(dish.getImageUrl())
+                .category(CategoryEntity.builder().id(dish.getCategoryId()).build())
+                .restaurant(RestaurantEntity.builder().id(dish.getRestaurantId()).build())
+                .active(dish.getActive())
+                .build();
+    }
+
     public Dish toDomain(DishEntity entity) {
         return new Dish(
                 entity.getId(),

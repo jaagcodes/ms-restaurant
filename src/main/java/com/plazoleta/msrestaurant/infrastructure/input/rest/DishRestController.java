@@ -1,6 +1,7 @@
 package com.plazoleta.msrestaurant.infrastructure.input.rest;
 
 import com.plazoleta.msrestaurant.application.dto.CreateDishRequest;
+import com.plazoleta.msrestaurant.application.dto.UpdateDishRequest;
 import com.plazoleta.msrestaurant.application.handler.IDishHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,5 +35,13 @@ public class DishRestController {
         dishHandler.createDish(request);
         log.info("✅ Dish '{}' successfully created", request.getName());
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateDish(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateDishRequest request) {
+        dishHandler.updateDish(id, request);
+        return ResponseEntity.noContent().build();
     }
 }
