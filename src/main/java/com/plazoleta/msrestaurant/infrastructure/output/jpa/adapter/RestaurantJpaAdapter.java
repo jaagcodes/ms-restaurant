@@ -27,4 +27,10 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
         return restaurantRepository.findByNit(nit)
                 .map(restaurantEntityMapper::toDomain);
     }
+
+    @Override
+    public Optional<Restaurant> findById(Long id) {
+        return restaurantRepository.findById(id)
+                .map(restaurantEntityMapper::toDomain);
+    }
 }
