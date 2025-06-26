@@ -5,7 +5,7 @@ import com.plazoleta.msrestaurant.domain.model.Dish;
 
 public class DishRequestMapper {
 
-    public Dish toDish(CreateDishRequest request) {
+    public Dish toDish(CreateDishRequest request, Long ownerId) {
         return new Dish(
                 null,
                 request.getName(),
@@ -15,7 +15,7 @@ public class DishRequestMapper {
                 request.getCategoryId(),
                 request.getRestaurantId(),
                 null,
-                request.getOwnerId()
+                ownerId
         );
     }
 }

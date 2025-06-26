@@ -5,9 +5,11 @@ import com.plazoleta.msrestaurant.application.dto.UpdateDishRequest;
 import com.plazoleta.msrestaurant.application.mapper.DishRequestMapper;
 import com.plazoleta.msrestaurant.domain.api.IDishServicePort;
 import com.plazoleta.msrestaurant.domain.model.Dish;
+import com.plazoleta.msrestaurant.infrastructure.security.util.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +23,12 @@ public class DishHandler implements IDishHandler {
     @Override
     public void createDish(CreateDishRequest request) {
         log.debug(" Mapping CreateDishRequest to domain model: {}", request.getName());
-        Dish dish = dishRequestMapper.toDish(request);
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Long ownerId = user.id();
+        Dish dish = dishRequestMapper.toDish(request, ownerId);
         log.debug(" Invoking use case to create dish: {}", dish.getName());
         dishServicePort.createDish(dish);
         log.info("✅ Dish '{}' processed successfully by handler", dish.getName());
@@ -30,6 +37,12 @@ public class DishHandler implements IDishHandler {
     @Override
     public void updateDish( Long id, UpdateDishRequest request) {
         log.debug(" Mapping UpdateDishRequest to domain model: {}", request.toString());
+        CustomUserDetails user = (CustomUserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        Long ownerId = user.id();
+
         Dish dish = new Dish(
                 id,
                 null, // name
@@ -39,7 +52,7 @@ public class DishHandler implements IDishHandler {
                 null, // categoryId
                 null, // restaurantId
                 null, // active
-                request.getOwnerId()
+                ownerId
         );
         dishServicePort.updateDish(dish);
         log.info("✅ Dish ID '{}' updated successfully by handler", dish.getId());

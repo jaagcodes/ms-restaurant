@@ -31,7 +31,7 @@ public class UserClientAdapter implements IUserClientPort {
             logger.warn("User with ID {} not found in User Service", id);
             throw new OwnerValidationException();
         } catch (FeignException.Forbidden e) {
-            logger.warn("User with ID {} does not have permission", id);
+            logger.warn("User with does not have permission", id);
             throw new ForbiddenException();
         } catch (FeignException e) {
             logger.error("Unexpected error calling User Service: status={} message={}", e.status(), e.getMessage());

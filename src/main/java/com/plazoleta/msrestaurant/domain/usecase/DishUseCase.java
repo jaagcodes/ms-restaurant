@@ -15,14 +15,11 @@ public class DishUseCase implements IDishServicePort {
     private static final Logger log = LoggerFactory.getLogger(DishUseCase.class);
 
     private final IDishPersistencePort dishPersistencePort;
-    private final IUserClientPort userClientPort;
     private final IRestaurantPersistencePort restaurantPersistencePort;
 
     public DishUseCase(IDishPersistencePort dishPersistencePort,
-                       IUserClientPort userClientPort,
                        IRestaurantPersistencePort restaurantPersistencePort) {
         this.dishPersistencePort = dishPersistencePort;
-        this.userClientPort = userClientPort;
         this.restaurantPersistencePort = restaurantPersistencePort;
     }
 
@@ -30,10 +27,6 @@ public class DishUseCase implements IDishServicePort {
     public void createDish(Dish dish) {
         log.info("Validating owner with ID {}", dish.getOwnerId());
 
-        if(!userClientPort.isUserOwner(dish.getOwnerId())) {
-            log.warn("User {} is not an owner", dish.getRestaurantId());
-            throw new OwnerNotValidException();
-        }
         var restaurantOpt = restaurantPersistencePort.findById(dish.getRestaurantId());
         if(restaurantOpt.isEmpty() || !restaurantOpt.get().getOwnerId().equals(dish.getOwnerId())){
             log.warn(" Owner ID {} does not match restaurant owner ID {}", dish.getOwnerId(), restaurantOpt.get().getOwnerId());
