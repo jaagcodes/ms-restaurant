@@ -30,6 +30,14 @@ public class CategoryDataSeeder {
             categoryRepository.save(comidaRapida);
         }
 
+        if (!categoryRepository.findByName("Comida gourmet").isPresent()) {
+            CategoryEntity comidaRapida = CategoryEntity.builder()
+                    .name("Comida gourmet")
+                    .description("Comida gourmet elaborada")
+                    .build();
+            categoryRepository.save(comidaRapida);
+        }
+
         System.out.println("✅ Categorías semilla insertadas");
     }
 }

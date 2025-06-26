@@ -5,4 +5,5 @@ import com.plazoleta.msrestaurant.domain.model.Restaurant;
 
 public interface IRestaurantHandler {
     void createRestaurant(CreateRestaurantRequest request);
+    boolean isOwnerOfRestaurant(Long userId, Long restaurantId);
 }

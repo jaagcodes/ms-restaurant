@@ -23,9 +23,6 @@ public class CreateDishRequest {
     @NotNull(message = "Restaurant ID is required")
     private Long restaurantId;
 
-    @NotNull(message = "Owner ID is required")
-    private Long ownerId;
-
     // Getters y Setters
 
     public String getName() {
@@ -74,13 +71,5 @@ public class CreateDishRequest {
 
     public void setRestaurantId(Long restaurantId) {
         this.restaurantId = restaurantId;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
     }
 }

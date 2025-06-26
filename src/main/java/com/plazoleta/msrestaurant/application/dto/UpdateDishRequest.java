@@ -14,9 +14,6 @@ public class UpdateDishRequest {
     @NotBlank(message = "Description is required")
     private String description;
 
-    @NotNull(message = "Owner ID is required")
-    private Long ownerId;
-
     public Integer getPrice() {
         return price;
     }
@@ -33,20 +30,11 @@ public class UpdateDishRequest {
         this.description = description;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
     @Override
     public String toString() {
         return "UpdateDishRequest{" +
                 "price=" + price +
                 ", description='" + description + '\'' +
-                ", ownerId=" + ownerId +
                 '}';
     }
 }

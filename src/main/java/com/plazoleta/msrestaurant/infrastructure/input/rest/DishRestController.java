@@ -12,7 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/dishes")
@@ -23,6 +27,7 @@ public class DishRestController {
     private final IDishHandler dishHandler;
 
     @PostMapping
+    @PreAuthorize("hasRole('OWNER')")
     @Operation(summary = "Create a new dish")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Dish created successfully"),
@@ -38,10 +43,23 @@ public class DishRestController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> updateDish(
             @PathVariable Long id,
             @Valid @RequestBody UpdateDishRequest request) {
         dishHandler.updateDish(id, request);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> whoami() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(
+                Map.of(
+                        "principal", auth.getPrincipal(),
+                        "authorities", auth.getAuthorities()
+                )
+        );
+    }
+
 }

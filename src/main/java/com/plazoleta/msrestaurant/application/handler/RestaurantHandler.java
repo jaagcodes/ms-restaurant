@@ -18,4 +18,9 @@ public class RestaurantHandler implements IRestaurantHandler {
     public void createRestaurant(CreateRestaurantRequest request) {
         restaurantServicePort.createRestaurant(restaurantRequestMapper.toRestaurant(request));
     }
+
+    @Override
+    public boolean isOwnerOfRestaurant(Long userId, Long restaurantId) {
+        return restaurantServicePort.isOwnerOfRestaurant(userId, restaurantId);
+    }
 }

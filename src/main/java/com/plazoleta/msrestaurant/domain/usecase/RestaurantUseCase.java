@@ -6,6 +6,7 @@ import com.plazoleta.msrestaurant.domain.spi.IRestaurantPersistencePort;
 import com.plazoleta.msrestaurant.domain.spi.IUserClientPort;
 import com.plazoleta.msrestaurant.infrastructure.exception.OwnerNotValidException;
 import com.plazoleta.msrestaurant.infrastructure.exception.RestaurantAlreadyExistsException;
+import com.plazoleta.msrestaurant.infrastructure.exception.RestaurantNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,5 +40,14 @@ public class RestaurantUseCase implements IRestaurantServicePort {
 
         restaurantPersistencePort.saveRestaurant(restaurant);
         logger.info("Restaurant successfully created with NIT: {}", restaurant.getNit());
+    }
+
+    @Override
+    public boolean isOwnerOfRestaurant(Long userId, Long restaurantId) {
+        logger.info("Searching restaurant with ID: {}", restaurantId);
+        Restaurant restaurant = restaurantPersistencePort.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantNotFoundException());
+
+        return restaurant.getOwnerId().equals(userId);
     }
 }
