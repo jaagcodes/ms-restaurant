@@ -6,7 +6,6 @@ import com.plazoleta.msrestaurant.domain.api.ISecurityServicePort;
 import com.plazoleta.msrestaurant.domain.model.Dish;
 import com.plazoleta.msrestaurant.domain.spi.IDishPersistencePort;
 import com.plazoleta.msrestaurant.domain.spi.IRestaurantPersistencePort;
-import com.plazoleta.msrestaurant.domain.spi.IUserClientPort;
 import com.plazoleta.msrestaurant.infrastructure.exception.DishNotFoundException;
 import com.plazoleta.msrestaurant.infrastructure.exception.OwnerNotValidException;
 import org.slf4j.Logger;
