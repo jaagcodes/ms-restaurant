@@ -2,6 +2,7 @@ package com.plazoleta.msrestaurant.infrastructure.input.rest;
 
 import com.plazoleta.msrestaurant.application.dto.CreateDishRequest;
 import com.plazoleta.msrestaurant.application.dto.UpdateDishRequest;
+import com.plazoleta.msrestaurant.application.dto.UpdateDishStatusRequest;
 import com.plazoleta.msrestaurant.application.handler.IDishHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,6 +61,16 @@ public class DishRestController {
                         "authorities", auth.getAuthorities()
                 )
         );
+    }
+
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<Void> updateStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateDishStatusRequest request
+    ){
+        dishHandler.updateDishStatus(id, request);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -4,6 +4,7 @@ import com.plazoleta.msrestaurant.application.mapper.DishRequestMapper;
 import com.plazoleta.msrestaurant.application.mapper.RestaurantRequestMapper;
 import com.plazoleta.msrestaurant.domain.api.IDishServicePort;
 import com.plazoleta.msrestaurant.domain.api.IRestaurantServicePort;
+import com.plazoleta.msrestaurant.domain.api.ISecurityServicePort;
 import com.plazoleta.msrestaurant.domain.spi.IDishPersistencePort;
 import com.plazoleta.msrestaurant.domain.spi.IRestaurantPersistencePort;
 import com.plazoleta.msrestaurant.domain.spi.IUserClientPort;
@@ -15,6 +16,7 @@ import com.plazoleta.msrestaurant.infrastructure.output.jpa.mapper.DishEntityMap
 import com.plazoleta.msrestaurant.infrastructure.output.jpa.mapper.RestaurantEntityMapper;
 import com.plazoleta.msrestaurant.infrastructure.output.jpa.repository.IDishRepository;
 import com.plazoleta.msrestaurant.infrastructure.output.jpa.repository.IRestaurantRepository;
+import com.plazoleta.msrestaurant.infrastructure.security.adapter.SecurityServiceAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,11 +29,18 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public ISecurityServicePort securityServicePort() {
+        return new SecurityServiceAdapter();
+    }
+
+    @Bean
     public IDishServicePort dishServicePort(
             IDishPersistencePort dishPersistencePort,
-            IRestaurantPersistencePort restaurantPersistencePort
+            IRestaurantPersistencePort restaurantPersistencePort,
+            ISecurityServicePort securityServicePort,
+            IRestaurantServicePort restaurantServicePort
     ) {
-        return new DishUseCase(dishPersistencePort, restaurantPersistencePort);
+        return new DishUseCase(dishPersistencePort, restaurantPersistencePort, securityServicePort, restaurantServicePort);
     }
 
     @Bean
