@@ -10,6 +10,7 @@ import com.plazoleta.msrestaurant.infrastructure.exception.RestaurantNotFoundExc
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 
 public class RestaurantUseCase implements IRestaurantServicePort {
@@ -49,5 +50,10 @@ public class RestaurantUseCase implements IRestaurantServicePort {
                 .orElseThrow(() -> new RestaurantNotFoundException());
 
         return restaurant.getOwnerId().equals(userId);
+    }
+
+    @Override
+    public List<Restaurant> getAllRestaurants(int page, int size) {
+        return restaurantPersistencePort.getAllRestaurants(page, size);
     }
 }
