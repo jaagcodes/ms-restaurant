@@ -1,6 +1,8 @@
 package com.plazoleta.msrestaurant.domain.usecase;
 
 import com.plazoleta.msrestaurant.domain.api.IDishServicePort;
+import com.plazoleta.msrestaurant.domain.api.IRestaurantServicePort;
+import com.plazoleta.msrestaurant.domain.api.ISecurityServicePort;
 import com.plazoleta.msrestaurant.domain.model.Dish;
 import com.plazoleta.msrestaurant.domain.spi.IDishPersistencePort;
 import com.plazoleta.msrestaurant.domain.spi.IRestaurantPersistencePort;
@@ -16,11 +18,18 @@ public class DishUseCase implements IDishServicePort {
 
     private final IDishPersistencePort dishPersistencePort;
     private final IRestaurantPersistencePort restaurantPersistencePort;
+    private final IRestaurantServicePort restaurantServicePort;
+    private final ISecurityServicePort securityServicePort;
 
     public DishUseCase(IDishPersistencePort dishPersistencePort,
-                       IRestaurantPersistencePort restaurantPersistencePort) {
+                       IRestaurantPersistencePort restaurantPersistencePort,
+                       ISecurityServicePort securityServicePort,
+                       IRestaurantServicePort restaurantServicePort)
+    {
         this.dishPersistencePort = dishPersistencePort;
         this.restaurantPersistencePort = restaurantPersistencePort;
+        this.securityServicePort = securityServicePort;
+        this.restaurantServicePort = restaurantServicePort;
     }
 
     @Override
@@ -59,5 +68,20 @@ public class DishUseCase implements IDishServicePort {
 
         log.info("Dish to update: {}", dish);
         dishPersistencePort.saveDish(existing);
+    }
+
+    @Override
+    public void updateDishStatus(Long dishId, Boolean isActive) {
+        Long userId = securityServicePort.getCurrentUserId();
+        Dish dish = dishPersistencePort.findById(dishId)
+                .orElseThrow(() -> new DishNotFoundException());
+
+        boolean isOwner = restaurantServicePort.isOwnerOfRestaurant(userId, dish.getRestaurantId());
+        if(!isOwner){
+            throw new OwnerNotValidException();
+        }
+
+        dish.setActive(isActive);
+        dishPersistencePort.saveDish(dish);
     }
 }

@@ -2,6 +2,7 @@ package com.plazoleta.msrestaurant.application.handler;
 
 import com.plazoleta.msrestaurant.application.dto.CreateDishRequest;
 import com.plazoleta.msrestaurant.application.dto.UpdateDishRequest;
+import com.plazoleta.msrestaurant.application.dto.UpdateDishStatusRequest;
 import com.plazoleta.msrestaurant.application.mapper.DishRequestMapper;
 import com.plazoleta.msrestaurant.domain.api.IDishServicePort;
 import com.plazoleta.msrestaurant.domain.model.Dish;
@@ -56,5 +57,10 @@ public class DishHandler implements IDishHandler {
         );
         dishServicePort.updateDish(dish);
         log.info("✅ Dish ID '{}' updated successfully by handler", dish.getId());
+    }
+
+    @Override
+    public void updateDishStatus(Long dishId, UpdateDishStatusRequest request) {
+        dishServicePort.updateDishStatus(dishId, request.getActive());
     }
 }
