@@ -46,4 +46,5 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
                 .map(restaurantEntityMapper::toDomain)
                 .collect(Collectors.toList());
     }
+
 }

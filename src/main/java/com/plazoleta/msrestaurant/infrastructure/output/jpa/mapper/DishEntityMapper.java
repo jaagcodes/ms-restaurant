@@ -46,4 +46,9 @@ public class DishEntityMapper {
                 entity.getActive()
         );
     }
+
+    public Dish toModel(DishEntity entity) {
+        return toDomain(entity);
+    }
+
 }

@@ -10,6 +10,7 @@ import com.plazoleta.msrestaurant.infrastructure.exception.DishNotFoundException
 import com.plazoleta.msrestaurant.infrastructure.exception.OwnerNotValidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 
 public class DishUseCase implements IDishServicePort {
 
@@ -82,5 +83,15 @@ public class DishUseCase implements IDishServicePort {
 
         dish.setActive(isActive);
         dishPersistencePort.saveDish(dish);
+    }
+
+    @Override
+    public Page<Dish> getDishesByRestaurant(Long restaurantId, Long categoryId, int page, int size) {
+        // Validación básica (puedes ampliarla si deseas)
+        if (restaurantId == null || page < 0 || size <= 0) {
+            throw new IllegalArgumentException("Parámetros inválidos para la consulta paginada.");
+        }
+
+        return dishPersistencePort.findDishesByRestaurantAndCategory(restaurantId, categoryId, page, size);
     }
 }

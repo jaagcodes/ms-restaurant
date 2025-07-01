@@ -8,6 +8,10 @@ import com.plazoleta.msrestaurant.infrastructure.output.jpa.repository.IDishRepo
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -36,4 +40,25 @@ public class DishJpaAdapter implements IDishPersistencePort {
         return dishRepository.findById(id)
                 .map(dishEntityMapper::toDomain);
     }
+
+    @Override
+    public Page<Dish> findDishesByRestaurantAndCategory(Long restaurantId, Long categoryId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+        Page<DishEntity> entities;
+
+        if (categoryId == null) {
+            entities = dishRepository.findByRestaurantId(restaurantId, pageable);
+        } else {
+            entities = dishRepository.findByRestaurantIdAndCategoryId(restaurantId, categoryId, pageable);
+        }
+
+        return entities.map(dishEntityMapper::toModel);
+    }
+
+    @Override
+    public boolean isDishFromRestaurant(Long dishId, Long restaurantId) {
+        log.debug("Verifying if dish {} belongs to restaurant {}", dishId, restaurantId);
+        return dishRepository.existsByIdAndRestaurantId(dishId, restaurantId);
+    }
+
 }

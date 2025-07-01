@@ -1,17 +1,23 @@
 package com.plazoleta.msrestaurant.application.handler;
 
 import com.plazoleta.msrestaurant.application.dto.CreateDishRequest;
+import com.plazoleta.msrestaurant.application.dto.DishResponse;
 import com.plazoleta.msrestaurant.application.dto.UpdateDishRequest;
 import com.plazoleta.msrestaurant.application.dto.UpdateDishStatusRequest;
 import com.plazoleta.msrestaurant.application.mapper.DishRequestMapper;
+import com.plazoleta.msrestaurant.application.mapper.DishResponseMapper;
 import com.plazoleta.msrestaurant.domain.api.IDishServicePort;
 import com.plazoleta.msrestaurant.domain.model.Dish;
 import com.plazoleta.msrestaurant.infrastructure.security.util.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,7 @@ public class DishHandler implements IDishHandler {
     private static final Logger log = LoggerFactory.getLogger(DishHandler.class);
     private final IDishServicePort dishServicePort;
     private final DishRequestMapper dishRequestMapper;
+    private final DishResponseMapper dishResponseMapper;
 
     @Override
     public void createDish(CreateDishRequest request) {
@@ -62,5 +69,12 @@ public class DishHandler implements IDishHandler {
     @Override
     public void updateDishStatus(Long dishId, UpdateDishStatusRequest request) {
         dishServicePort.updateDishStatus(dishId, request.getActive());
+    }
+
+    @Override
+    public Page<DishResponse> getDishesByRestaurant(Long restaurantId, Long categoryId, int page, int size) {
+        Page<Dish> dishesPage = dishServicePort.getDishesByRestaurant(restaurantId, categoryId, page, size);
+        List<DishResponse> responseList = dishResponseMapper.toResponseList(dishesPage.getContent());
+        return new PageImpl<>(responseList, dishesPage.getPageable(), dishesPage.getTotalElements());
     }
 }
