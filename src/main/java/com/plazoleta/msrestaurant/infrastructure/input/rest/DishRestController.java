@@ -1,6 +1,7 @@
 package com.plazoleta.msrestaurant.infrastructure.input.rest;
 
 import com.plazoleta.msrestaurant.application.dto.CreateDishRequest;
+import com.plazoleta.msrestaurant.application.dto.DishResponse;
 import com.plazoleta.msrestaurant.application.dto.UpdateDishRequest;
 import com.plazoleta.msrestaurant.application.dto.UpdateDishStatusRequest;
 import com.plazoleta.msrestaurant.application.handler.IDishHandler;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,5 +74,17 @@ public class DishRestController {
         dishHandler.updateDishStatus(id, request);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/restaurants/{restaurantId}")
+    public ResponseEntity<Page<DishResponse>> getDishesByRestaurant(
+            @PathVariable Long restaurantId,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<DishResponse> dishes = dishHandler.getDishesByRestaurant(restaurantId, categoryId, page, size);
+        return ResponseEntity.ok(dishes);
+    }
+
 
 }
