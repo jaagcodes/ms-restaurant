@@ -102,9 +102,10 @@ public class BeanConfiguration {
     public IOrderServicePort orderServicePort(
             IOrderPersistencePort orderPersistencePort,
             IDishPersistencePort dishPersistencePort,
-            ISecurityServicePort securityServicePort
+            ISecurityServicePort securityServicePort,
+            IUserClientPort userClientPort
     ) {
-        return new OrderUseCase(orderPersistencePort, dishPersistencePort, securityServicePort);
+        return new OrderUseCase(orderPersistencePort, dishPersistencePort, securityServicePort, userClientPort);
     }
 
 

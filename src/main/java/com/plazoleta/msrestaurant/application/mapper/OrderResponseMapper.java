@@ -2,6 +2,7 @@ package com.plazoleta.msrestaurant.application.mapper;
 
 import com.plazoleta.msrestaurant.application.dto.DishQuantityResponse;
 import com.plazoleta.msrestaurant.application.dto.OrderResponse;
+import com.plazoleta.msrestaurant.application.dto.TakeOrderResponse;
 import com.plazoleta.msrestaurant.domain.model.Order;
 
 import java.util.List;
@@ -25,4 +26,21 @@ public class OrderResponseMapper {
 
         return response;
     }
+
+    public TakeOrderResponse toTakeOrderResponse(Order order) {
+        TakeOrderResponse response = new TakeOrderResponse();
+        response.setId(order.getId());
+        response.setClientId(order.getClientId());
+        response.setRestaurantId(order.getRestaurantId());
+        response.setChefId(order.getChefId());
+        response.setDate(order.getDate());
+        response.setStatus(order.getStatus().name());
+        response.setDishes(
+                order.getDishes().stream()
+                        .map(d -> new DishQuantityResponse(d.getDishId(), d.getQuantity()))
+                        .collect(Collectors.toList())
+        );
+        return response;
+    }
+
 }

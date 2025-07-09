@@ -37,17 +37,46 @@ public class OrderEntityMapper {
         return orderEntity;
     }
 
+    public OrderEntity toEntityWithoutDishes(Order order) {
+        OrderEntity orderEntity = OrderEntity.builder()
+                .clientId(order.getClientId())
+                .restaurantId(order.getRestaurantId())
+                .status(order.getStatus())
+                .chefId(order.getChefId())
+                .date(order.getDate())
+                .build();
+
+        if(order.getId() != null) {
+            orderEntity.setId(order.getId());
+        }
+
+        return orderEntity;
+    }
+
     public Order toModel(OrderEntity entity) {
         return new Order(
                 entity.getId(),
                 entity.getClientId(),
                 entity.getRestaurantId(),
-                entity.getChefId(),
                 entity.getDishes().stream()
                         .map(d -> new OrderDish(d.getId().getDishId(), d.getQuantity()))
                         .collect(Collectors.toList()),
                 entity.getDate(),
                 entity.getStatus()
+        );
+    }
+
+    public Order toModelWithChefId(OrderEntity entity) {
+        return new Order(
+                entity.getId(),
+                entity.getClientId(),
+                entity.getRestaurantId(),
+                entity.getDishes().stream()
+                        .map(d -> new OrderDish(d.getId().getDishId(), d.getQuantity()))
+                        .collect(Collectors.toList()),
+                entity.getDate(),
+                entity.getStatus(),
+                entity.getChefId()
         );
     }
 }
