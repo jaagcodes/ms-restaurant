@@ -20,7 +20,6 @@ public class OrderRequestMapper {
                 null, // id
                 null,// clientId
                 request.getRestaurantId(),
-                request.getChefId(), // chefId (se asignará después)
                 dishList,
                 null, // date (se asigna en el usecase)
                 null  // status (se asigna en el usecase)

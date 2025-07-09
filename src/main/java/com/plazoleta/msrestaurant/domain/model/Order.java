@@ -12,14 +12,23 @@ public class Order {
     private LocalDateTime date;
     private OrderStatus status;
 
-    public Order(Long id, Long clientId, Long restaurantId, Long chefId, List<OrderDish> dishes, LocalDateTime date, OrderStatus status) {
+    public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, LocalDateTime date, OrderStatus status) {
         this.id = id;
         this.clientId = clientId;
         this.restaurantId = restaurantId;
-        this.chefId = chefId;
         this.dishes = dishes;
         this.date = date;
         this.status = status;
+    }
+
+    public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, LocalDateTime date, OrderStatus status, Long chefId) {
+        this.id = id;
+        this.clientId = clientId;
+        this.restaurantId = restaurantId;
+        this.dishes = dishes;
+        this.date = date;
+        this.status = status;
+        this.chefId = chefId;
     }
 
     public Long getId() {

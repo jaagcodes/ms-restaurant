@@ -37,6 +37,22 @@ public class UserClientAdapter implements IUserClientPort {
             logger.error("Unexpected error calling User Service: status={} message={}", e.status(), e.getMessage());
             throw new ApplicationException("Unexpected error consuming users service: "+ e.status(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    @Override
+    public boolean isEmployeeOfRestaurant(Long employeeId, Long restaurantId) {
+        logger.info("Validating if employee with ID {} is employee of restaurant with ID {}", employeeId, restaurantId);
+        try{
+        return userClient.isEmployeeOfRestaurant(employeeId, restaurantId);
+        } catch (FeignException.NotFound e) {
+            logger.warn("Employee with ID {} not found in User Service", employeeId);
+            throw new OwnerValidationException();
+        } catch (FeignException.Forbidden e) {
+            logger.warn("User with ID {} does not have permission", employeeId);
+            throw new ForbiddenException();
+        } catch (FeignException e) {
+            logger.error("Unexpected error calling User Service: status={} message={}", e.status(), e.getMessage());
+            throw new ApplicationException("Unexpected error consuming users service: "+ e.status(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

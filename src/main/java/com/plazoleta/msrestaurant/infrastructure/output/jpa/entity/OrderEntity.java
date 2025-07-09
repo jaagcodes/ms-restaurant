@@ -35,7 +35,19 @@ public class OrderEntity {
 
     private LocalDateTime date;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDishEntity> dishes;
 
+    @Override
+    public String toString() {
+        return "OrderEntity{" +
+                "id=" + id +
+                ", clientId=" + clientId +
+                ", restaurantId=" + restaurantId +
+                ", status=" + status +
+                ", chefId=" + chefId +
+                ", date=" + date +
+                ", dishes=" + dishes +
+                '}';
+    }
 }

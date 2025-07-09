@@ -18,14 +18,11 @@ public class CreateOrderRequest {
     @NotNull(message = "Must include at least one dish")
     private List<OrderDishRequest> dishes;
 
-    private Long chefId;
-
     @Override
     public String toString() {
         return "CreateOrderRequest{" +
                 ", restaurantId=" + restaurantId +
                 ", dishes=" + dishes +
-                ", chefId=" + chefId +
                 '}';
     }
 }
