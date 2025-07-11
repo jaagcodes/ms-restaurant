@@ -44,6 +44,7 @@ public class OrderEntityMapper {
                 .status(order.getStatus())
                 .chefId(order.getChefId())
                 .date(order.getDate())
+                .securityPin(order.getSecurityPin())
                 .build();
 
         if(order.getId() != null) {

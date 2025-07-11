@@ -1,9 +1,6 @@
 package com.plazoleta.msrestaurant.infrastructure.input.rest;
 
-import com.plazoleta.msrestaurant.application.dto.CreateOrderRequest;
-import com.plazoleta.msrestaurant.application.dto.OrderResponse;
-import com.plazoleta.msrestaurant.application.dto.PaginatedOrderResponse;
-import com.plazoleta.msrestaurant.application.dto.TakeOrderResponse;
+import com.plazoleta.msrestaurant.application.dto.*;
 import com.plazoleta.msrestaurant.application.handler.IOrderHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -111,5 +107,15 @@ public class OrderRestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/{orderId}/delivered")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<OrderResponse> markAsDelivered(
+            @PathVariable Long orderId,
+            @RequestBody OrderDeliveredRequest orderDeliveredRequest
+    ){
+        log.info(" [REST] mark order as DELIVERED orderId: {}, PIN: {}", orderId, orderDeliveredRequest.getProvidedPin());
+        OrderResponse response = orderHandler.markOrderDelivered(orderId, orderDeliveredRequest.getProvidedPin());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }

@@ -10,4 +10,5 @@ public interface IOrderHandler {
     PaginatedOrderResponse getOrdersByStatus(String status, Long restaurantId, int page, int size);
     TakeOrderResponse takeOrder(Long orderId);
     OrderResponse markOrderReady(Long orderId);
+    OrderResponse markOrderDelivered(Long orderId, String providedPIN);
 }
