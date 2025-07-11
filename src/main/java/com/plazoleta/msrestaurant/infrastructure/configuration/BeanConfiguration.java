@@ -8,10 +8,7 @@ import com.plazoleta.msrestaurant.domain.api.IDishServicePort;
 import com.plazoleta.msrestaurant.domain.api.IOrderServicePort;
 import com.plazoleta.msrestaurant.domain.api.IRestaurantServicePort;
 import com.plazoleta.msrestaurant.domain.api.ISecurityServicePort;
-import com.plazoleta.msrestaurant.domain.spi.IDishPersistencePort;
-import com.plazoleta.msrestaurant.domain.spi.IOrderPersistencePort;
-import com.plazoleta.msrestaurant.domain.spi.IRestaurantPersistencePort;
-import com.plazoleta.msrestaurant.domain.spi.IUserClientPort;
+import com.plazoleta.msrestaurant.domain.spi.*;
 import com.plazoleta.msrestaurant.domain.usecase.DishUseCase;
 import com.plazoleta.msrestaurant.domain.usecase.OrderUseCase;
 import com.plazoleta.msrestaurant.domain.usecase.RestaurantUseCase;
@@ -103,9 +100,10 @@ public class BeanConfiguration {
             IOrderPersistencePort orderPersistencePort,
             IDishPersistencePort dishPersistencePort,
             ISecurityServicePort securityServicePort,
-            IUserClientPort userClientPort
+            IUserClientPort userClientPort,
+            ISmsClientPort smsClientPort
     ) {
-        return new OrderUseCase(orderPersistencePort, dishPersistencePort, securityServicePort, userClientPort);
+        return new OrderUseCase(orderPersistencePort, dishPersistencePort, securityServicePort, userClientPort, smsClientPort);
     }
 
 

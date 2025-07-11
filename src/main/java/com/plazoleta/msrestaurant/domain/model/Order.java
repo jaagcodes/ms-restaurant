@@ -11,6 +11,7 @@ public class Order {
     private List<OrderDish> dishes;
     private LocalDateTime date;
     private OrderStatus status;
+    private String securityPin;
 
     public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, LocalDateTime date, OrderStatus status) {
         this.id = id;
@@ -29,6 +30,25 @@ public class Order {
         this.date = date;
         this.status = status;
         this.chefId = chefId;
+    }
+
+    public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, LocalDateTime date, OrderStatus status, Long chefId, String securityPin) {
+        this.id = id;
+        this.clientId = clientId;
+        this.restaurantId = restaurantId;
+        this.dishes = dishes;
+        this.date = date;
+        this.status = status;
+        this.chefId = chefId;
+        this.securityPin = securityPin;
+    }
+
+    public String getSecurityPin() {
+        return securityPin;
+    }
+
+    public void setSecurityPin(String securityPin) {
+        this.securityPin = securityPin;
     }
 
     public Long getId() {

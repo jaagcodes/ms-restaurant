@@ -60,8 +60,9 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
         Page<OrderEntity> resultPage = orderRepository.findByRestaurantIdAndStatus(restaurantId, status, PageRequest.of(page, size));
         List<Order> orderList = resultPage.getContent()
                 .stream()
-                .map(orderEntityMapper::toModel)
+                .map(orderEntityMapper::toModelWithChefId)
                 .collect(Collectors.toList());
+        orderList.forEach(order -> {log.info("[OrderJpaAdapter] order: {}", order.toString());});
 
         return new PageImpl<>(orderList, resultPage.getPageable(), resultPage.getTotalElements());
     }
@@ -69,7 +70,7 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     @Override
     public Order findById(Long orderId) {
        return orderRepository.findById(orderId)
-               .map(orderEntityMapper::toModel)
+               .map(orderEntityMapper::toModelWithChefId)
                .orElse(null);
     }
 

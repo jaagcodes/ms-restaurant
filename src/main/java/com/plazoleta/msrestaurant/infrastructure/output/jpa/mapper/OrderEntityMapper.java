@@ -79,4 +79,19 @@ public class OrderEntityMapper {
                 entity.getChefId()
         );
     }
+
+    public Order toModelWithSecurityPin(OrderEntity entity) {
+        return new Order(
+                entity.getId(),
+                entity.getClientId(),
+                entity.getRestaurantId(),
+                entity.getDishes().stream()
+                        .map(d -> new OrderDish(d.getId().getDishId(), d.getQuantity()))
+                        .collect(Collectors.toList()),
+                entity.getDate(),
+                entity.getStatus(),
+                entity.getChefId(),
+                entity.getSecurityPin()
+        );
+    }
 }
