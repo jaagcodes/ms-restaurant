@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Random;
 
 public class OrderUseCase implements IOrderServicePort {
@@ -87,7 +88,7 @@ public class OrderUseCase implements IOrderServicePort {
         log.info("🔄 [UseCase] takeOrder getting current order: {}", order.toString());
 
         if (!OrderStatus.PENDING.equals(order.getStatus())) {
-            throw new InvalidOrderStatusException();
+            throw new InvalidOrderStatusException(OrderStatus.PENDING.toString(), OrderStatus.IN_PREPARATION.toString());
         }
 
         boolean isEmployeeOfRestaurant = userClientPort.isEmployeeOfRestaurant(currentEmployeeId, order.getRestaurantId());
@@ -112,7 +113,7 @@ public class OrderUseCase implements IOrderServicePort {
 
         log.info("[UseCase] validating IN_PREPARATION state order: {}", order.toString());
         if(!OrderStatus.IN_PREPARATION.equals(order.getStatus())) {
-            throw new InvalidOrderStatusException();
+            throw new InvalidOrderStatusException(OrderStatus.IN_PREPARATION.toString(), OrderStatus.READY.toString());
         }
 
         if(!currentEmployeeId.equals(order.getChefId())) {
@@ -139,6 +140,31 @@ public class OrderUseCase implements IOrderServicePort {
         } catch(Exception e) {
             log.error("❌ Error al enviar el SMS al cliente del pedido {}", orderId, e);
         }
+        return updatedOrder;
+    }
+
+    @Override
+    public Order markOrderDelivered(Long orderId, String providedPin) {
+        Order order = orderPersistencePort.findById(orderId);
+        if(order == null) {
+            throw new OrderNotFoundException();
+        }
+        log.info("[UseCase] Comparing current user ID: {} employee assigned to the order: {}", securityServicePort.getCurrentUserId(), order.getChefId());
+        if(!Objects.equals(securityServicePort.getCurrentUserId(), order.getChefId())) {
+            throw new NotARestaurantEmployee();
+        }
+        log.info("[UseCase] Comparing order securityPIN: {} with provided PIN: {}", order.getSecurityPin(), providedPin);
+        if(!Objects.equals(order.getSecurityPin(), providedPin)) {
+            throw new InvalidSecurityPINException();
+        }
+        log.info("[UseCase] Verifying if order status: {} is: {}", order.getStatus(), OrderStatus.READY);
+        if(!order.getStatus().equals(OrderStatus.READY)) {
+            throw new InvalidOrderStatusException(OrderStatus.READY.toString(), OrderStatus.DELIVERED.toString());
+        }
+        order.setStatus(OrderStatus.DELIVERED);
+        log.info("[UseCase] Updating Order: {}", order.toString());
+        Order updatedOrder = orderPersistencePort.updateOrder(order);
+        log.info("[UseCase] Updated and Persisted Order: {}", updatedOrder.toString());
         return updatedOrder;
     }
 

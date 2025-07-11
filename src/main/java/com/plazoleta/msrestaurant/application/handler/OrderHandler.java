@@ -67,4 +67,12 @@ public class OrderHandler implements IOrderHandler {
         log.info("🔄 [Order Handler] marked as READY order: {}", order);
         return orderResponseMapper.toResponse(order);
     }
+
+    @Override
+    public OrderResponse markOrderDelivered(Long orderId, String providedPIN) {
+        log.info("🔄 [Order Handler] mark as delivered order: {}", orderId);
+        Order order = orderServicePort.markOrderDelivered(orderId,  providedPIN);
+        log.info("🔄 [Order Handler] marked as DELIVERED order: {}", order);
+        return orderResponseMapper.toResponse(order);
+    }
 }

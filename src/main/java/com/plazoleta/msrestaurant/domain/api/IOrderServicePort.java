@@ -9,4 +9,5 @@ public interface IOrderServicePort {
     Page<Order> getOrdersByStatus(OrderStatus status, Long restaurantId, int page, int size);
     Order takeOrder(Long orderId);
     Order markOrderReady(Long orderId);
+    Order markOrderDelivered(Long orderId, String providedPin);
 }

@@ -41,7 +41,7 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
         updatedEntity.setDishes(existingEntity.getDishes());
 
         OrderEntity savedEntity = orderRepository.save(updatedEntity);
-        return orderEntityMapper.toModelWithChefId(savedEntity);
+        return orderEntityMapper.toModelWithSecurityPin(savedEntity);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     @Override
     public Order findById(Long orderId) {
        return orderRepository.findById(orderId)
-               .map(orderEntityMapper::toModelWithChefId)
+               .map(orderEntityMapper::toModelWithSecurityPin)
                .orElse(null);
     }
 
