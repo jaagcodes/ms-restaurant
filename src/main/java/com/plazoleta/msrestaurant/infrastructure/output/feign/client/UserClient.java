@@ -1,6 +1,7 @@
 package com.plazoleta.msrestaurant.infrastructure.output.feign.client;
 
-
+import com.plazoleta.msrestaurant.application.dto.UserDto;
+import com.plazoleta.msrestaurant.domain.model.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,4 +14,7 @@ public interface UserClient {
 
     @GetMapping("/users/validate-employee")
     Boolean isEmployeeOfRestaurant(@RequestParam Long employeeId, @RequestParam Long restaurantId);
+
+    @GetMapping("/users/{userId}")
+    UserDto getUserById(@PathVariable Long userId);
 }

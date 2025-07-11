@@ -35,6 +35,9 @@ public class OrderEntity {
 
     private LocalDateTime date;
 
+    @Column(name = "security_pin")
+    private String securityPin;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDishEntity> dishes;
 

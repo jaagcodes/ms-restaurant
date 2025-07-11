@@ -39,6 +39,7 @@ public class OrderHandler implements IOrderHandler {
     public PaginatedOrderResponse getOrdersByStatus( String status, Long restaurantId, int page, int size) {
         OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
         Page<Order> ordersPage = orderServicePort.getOrdersByStatus(orderStatus, restaurantId, page, size);
+        log.info("[Handler] ordersPage: {}", ordersPage.toString());
 
         List<OrderResponse> orderResponses = ordersPage.getContent().stream()
                 .map(orderResponseMapper::toResponse)
@@ -57,5 +58,13 @@ public class OrderHandler implements IOrderHandler {
     public TakeOrderResponse takeOrder(Long orderId) {
         Order updatedOrder = orderServicePort.takeOrder(orderId);
         return orderResponseMapper.toTakeOrderResponse(updatedOrder);
+    }
+
+    @Override
+    public OrderResponse markOrderReady(Long orderId) {
+        log.info("🔄 [Order Handler] mark as ready order: {}", orderId);
+        Order order = orderServicePort.markOrderReady(orderId);
+        log.info("🔄 [Order Handler] marked as READY order: {}", order);
+        return orderResponseMapper.toResponse(order);
     }
 }

@@ -6,6 +6,7 @@ import com.plazoleta.msrestaurant.application.dto.PaginatedOrderResponse;
 import com.plazoleta.msrestaurant.application.dto.TakeOrderResponse;
 import com.plazoleta.msrestaurant.application.handler.IOrderHandler;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -64,6 +65,50 @@ public class OrderRestController {
     public ResponseEntity<TakeOrderResponse> takeOrder(@PathVariable Long orderId) {
         TakeOrderResponse response = orderHandler.takeOrder(orderId);
         return ResponseEntity.ok(response);
+    }
+
+
+    @Operation(
+            summary = "Marcar pedido como listo",
+            description = "Cambia el estado del pedido a READY y envía un SMS con un PIN de seguridad al cliente que realizó el pedido.",
+            tags = {"Pedidos"}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Pedido actualizado exitosamente",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Pedido no encontrado",
+                    content = @Content(schema = @Schema(example = "{ \"message\": \"Order not found\" }"))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "El empleado no tiene permisos para modificar este pedido",
+                    content = @Content(schema = @Schema(example = "{ \"message\": \"User is not allowed to modify this order\" }"))
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "El pedido no se encuentra en estado válido para esta operación",
+                    content = @Content(schema = @Schema(example = "{ \"message\": \"Invalid order status\" }"))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error inesperado en el servidor",
+                    content = @Content(schema = @Schema(example = "{ \"message\": \"Unexpected error\" }"))
+            )
+    })
+    @PatchMapping("/{orderId}/ready")
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    public ResponseEntity<OrderResponse> markOrderAsReady(
+            @Parameter(description = "ID del pedido que se desea marcar como listo", example = "123")
+            @PathVariable Long orderId
+    ) {
+        log.info("✅ [REST] mark order as READY: {}", orderId);
+        OrderResponse response = orderHandler.markOrderReady(orderId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

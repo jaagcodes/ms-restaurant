@@ -4,13 +4,17 @@ import com.plazoleta.msrestaurant.application.dto.DishQuantityResponse;
 import com.plazoleta.msrestaurant.application.dto.OrderResponse;
 import com.plazoleta.msrestaurant.application.dto.TakeOrderResponse;
 import com.plazoleta.msrestaurant.domain.model.Order;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderResponseMapper {
+    private static final Logger logger = LoggerFactory.getLogger(OrderResponseMapper.class);
 
     public OrderResponse toResponse(Order order) {
+        logger.info("[OrderResponseMapper] order: {}", order.toString());
         List<DishQuantityResponse> dishes = order.getDishes().stream()
                 .map(d -> new DishQuantityResponse(d.getDishId(), d.getQuantity()))
                 .collect(Collectors.toList());
