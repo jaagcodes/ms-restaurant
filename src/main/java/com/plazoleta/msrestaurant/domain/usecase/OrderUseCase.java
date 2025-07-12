@@ -168,6 +168,27 @@ public class OrderUseCase implements IOrderServicePort {
         return updatedOrder;
     }
 
+    @Override
+    public Order markOrderCanceled(Long orderId) {
+        Order order = orderPersistencePort.findById(orderId);
+        if(order == null) {
+            throw new OrderNotFoundException();
+        }
+        log.info("[UseCase] order to cancel: {}", order.toString());
+        Long requestUserId = securityServicePort.getCurrentUserId();
+        log.info("[UseCase] current  request userId: {}", requestUserId);
+        if(!Objects.equals(securityServicePort.getCurrentUserId(), order.getClientId())) {
+            throw new ClientNotAllowedException();
+        }
+        if(!order.getStatus().equals(OrderStatus.PENDING)) {
+            throw new InvalidOrderStatusException(OrderStatus.PENDING.toString(), OrderStatus.CANCELED.toString());
+        }
+        order.setStatus(OrderStatus.CANCELED);
+        Order updatedOrder = orderPersistencePort.updateOrder(order);
+        log.info("[UseCase] Updating Order: {}", updatedOrder.toString());
+        return updatedOrder;
+    }
+
     private String generateSecurityPin() {
         return String.format("%06d", (int) (Math.random() * 1000000));
     }
