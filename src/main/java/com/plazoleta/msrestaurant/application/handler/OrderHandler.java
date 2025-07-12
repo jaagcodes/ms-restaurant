@@ -75,4 +75,12 @@ public class OrderHandler implements IOrderHandler {
         log.info("🔄 [Order Handler] marked as DELIVERED order: {}", order);
         return orderResponseMapper.toResponse(order);
     }
+
+    @Override
+    public OrderResponse markOrderCanceled(Long orderId) {
+        log.info("🔄 [Order Handler] mark as canceled order: {}", orderId);
+        Order order = orderServicePort.markOrderCanceled(orderId);
+        log.info("🔄 [Order Handler] marked as CANCELED order: {}", order);
+        return orderResponseMapper.toResponse(order);
+    }
 }

@@ -11,4 +11,5 @@ public interface IOrderHandler {
     TakeOrderResponse takeOrder(Long orderId);
     OrderResponse markOrderReady(Long orderId);
     OrderResponse markOrderDelivered(Long orderId, String providedPIN);
+    OrderResponse markOrderCanceled(Long orderId);
 }

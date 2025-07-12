@@ -107,7 +107,7 @@ public class OrderRestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PatchMapping("/{orderId}/delivered")
+    @PatchMapping("/{orderId}/deliver")
     @PreAuthorize("hasRole('EMPLOYEE')")
     public ResponseEntity<OrderResponse> markAsDelivered(
             @PathVariable Long orderId,
@@ -115,6 +115,16 @@ public class OrderRestController {
     ){
         log.info(" [REST] mark order as DELIVERED orderId: {}, PIN: {}", orderId, orderDeliveredRequest.getProvidedPin());
         OrderResponse response = orderHandler.markOrderDelivered(orderId, orderDeliveredRequest.getProvidedPin());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{orderId}/cancel")
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<OrderResponse> markAsCancel(
+            @PathVariable Long orderId
+    ){
+        log.info(" [REST] mark order as CANCELED orderId: {}", orderId);
+        OrderResponse response = orderHandler.markOrderCanceled(orderId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
